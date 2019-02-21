@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://code.createjs.com/easeljs-0.8.2.min.js"></script>
+    <script>
+        
+        function Canteen(name,url){
+            this.name = name;
+            this.url = url;
+            
+            var xmlHttp = new XMLHttpRequest();
+            xmlHttp.open( "GET", url, false ); // false for synchronous request
+            xmlHttp.send( null );
+            
+            var offer = xmlHttp.responseText;
+            console.log(offer);
+        }
+
+
+        var menu = function(x, y, scale, canteens){
+            var container = new createjs.Container();
+            container.x = x;
+            container.y = y;
+            container.scaleX = scale;
+            container.scaleY = scale;
+    
+            var title = new createjs.Text("Speiseplan der Mensa ", "20px Arial", 'White');
+            title.x = 0;
+            title.y = 0;
+            
+            var maxName = new createjs.Text("Ahornstraße", "20px Arial", 'Black');
+            
+            var choicebutton = new createjs.Shape();
+            choicebutton.graphics.setStrokeStyle(1,"round").beginStroke('black').beginFill('white').drawRect(title.getBounds().width + 4, 0, maxName.getBounds().width, maxName.getBounds().height);
+            
+            
+            var ids = [];
+            
+            for(int i = 0; i < canteens.length; i++){
+                var offer = canteens[i].offer;
+                var meallist = new createjs.Container();
+                var indexArray = [offer.indexOf("🍽"), offer.indexOf("🥗"), offer.indexOf("👨🏻‍🍳"), offer.indexOf("👌🏿👨🏿‍🍳"), offer.indexOf("🥘"), offer.indexOf("🥔"), offer.indexOf("🍝"), offer.indexOf("🍕"), offer.indexOf("🥩"), offer.indexOf("🍔"), offer.indexOf("🥪"), offer.indexOf("🔥"), offer.indexOf("Hauptbeilagen"), offer.indexOf("Nebenbeilagen")];
+                indexArray.sort();
+                var currentY = title.getBounds().height*1.5;
+                var maxLength = 0;
+                var textIDs = [];
+                for(int j = 0; j<indexArray.length;j++){
+                    if(indexArray[j] == -1){
+                        continue;
+                    }
+                    var text = new createjs.Text(offer.substring(j, indexArray[j+1]-1, "20px Arial",'Black');
+                    text.x = 0;
+                    text.y = currentY;
+                    meallist.addChild(text);
+                    textIDs.push(meallist.getChildIndex(text));
+                    currentY = currentY + text.getBounds().height;
+                    if(maxLength<text.getBounds().width){
+                        maxLength == text.getBounds().width;
+                    }
+                }
+                for(int j = 0;j<textIDs.length;j++){
+                    var rowBox = new createjs.Shape();
+                    var txt = meallist.getChildAt(textIDs[j]);
+                    if(j%2==0){
+                        rowBox.graphics.beginFill('white').drawRect(0, txt.y, txt.getBounds().width, txt.getBounds().height);
+                    } else{ rowBox.graphics.beginFill('snow').drawRect((0, txt.y, txt.getBounds().width, txt.getBounds().height);}
+                    meallist.addChild(rowBox);
+                }
+                container.addChild(meallist);
+                ids.push(container.getChildIndex(meallist));
+            }
+            
+            var currentY = choicebutton.getBounds().height;
+            for(int i =0; i<canteens.length;i++){
+                var text = new createjs.Text(canteens[i].name,"20px Arial", 'Black');
+                var canteenButton = new createjs.Shape();
+                canteenButton..graphics.setStrokeStyle(1,"round").beginStroke('black').beginFill('white').drawRect(choicebutton.x, currentY, maxName.getBounds().width, maxName.getBounds().height);
+                currentY = currentY + canteenButton.getBounds().height;
+                
+                canteenButton.addEventListener("mousedown", function(event) {
+                    
+                });
+            }    
+            
+            choicebutton.addEventListener("mousedown", function(event) {
+                
+            });
+            
+            
+        
+    
+            
+            
+            
+            
+            container.addChild(title, choicebutton);
+            return container;
+        }
+        
+        
+        
+        function init() {
+            alert("🍽🥗👨🏻‍🍳👌🏿👨🏿‍🍳🥘🥔🍝🍕🥩🍔🥪🔥");
+            var stage = new createjs.Stage("Canvas");
+            var rect = new createjs.Shape();
+                  rect.graphics.beginFill('DarkGoldenrod');
+                  rect.graphics.drawRect(0, 0, Canvas.width, Canvas.height);
+                  rect.graphics.endFill();
+                        
+            var logo = new createjs.Bitmap("Download.png");
+            logo.scaleX =0.25 * (Canvas.width/500);
+            logo.scaleY =0.25 * (Canvas.width/500);
+            logo.x = 0/*Canvas.width/4*/;
+            logo.y = 0/*Canvas.height/4*/;
+            
+            var title = new createjs.Text("las2peer - Mensa -Service", "55px Arial", 'White');
+            title.x = 134*logo.scaleX + 10*logo.scaleX;
+            title.y = 134*1/2*logo.scaleX;
+            title.scaleX = Canvas.width/1250;
+            title.scaleY = Canvas.width/1250;
+             
+            var canteens = [new Canteen("Academica", "https://las2peer.dbis.rwth-aachen.de:9098/mensa/academica"), new Canteen("Ahornstraße", "https://las2peer.dbis.rwth-aachen.de:9098/mensa/ahornstrasse"), new Canteen("Vita", "https://las2peer.dbis.rwth-aachen.de:9098/mensa/vita")]
+            
+            stage.addChild(rect, logo, title, menu((134*logo.scaleX)/2, 134*logo.scaleX + 60*logo.scaleX, Canvas.width/1250, "Hallo"));
+            /*stage.addChild(logo);
+            stage.*/
+            /*stage.addChild(text);*/
+            logo.image.onload = function() {
+                stage.update();
+            }
+            
+            
+            console.log(Canvas, logo.image.getBounds().width);
+            
+        }
+    </script>
+</head>
+<body onload="init();">
+    <canvas id="Canvas" width=1250 height=500>
+        alternate content
+    </canvas>
+</body>
+</html>
