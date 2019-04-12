@@ -31,13 +31,16 @@
 
             var choicebuttonText = new createjs.Text("","20px Arial", 'Black');
             choicebuttonText.x = title.getBounds().width + 4;
-            choicebuttonText.x = 0;
+            choicebuttonText.y = 0;
 
             var choicebutton = new createjs.Shape();
             choicebutton.graphics.setStrokeStyle(1,"round").beginStroke('black').beginFill('white').drawRect(title.getBounds().width + 4, 0, maxName.getBounds().width, maxName.getBounds().height);
 
 
-            var ids = [];
+            
+            
+            var ids = [];       //The ID's of the meal lists in the container
+            /*The meal lists are drawn and added to the container*/
             for(var i=0; i<canteens.length; i++){
                 console.log("Canteens" + canteens[0])
                 var offer = canteens[i].offer;
@@ -73,9 +76,13 @@
                 container.addChild(meallist);
                 ids.push(container.getChildIndex(meallist));
             }
-
-            var currentY = maxName.getBounds().height;
-            var canteenButtons = [];
+            
+            
+            
+            
+            var currentY = maxName.getBounds().height;  //the Y-Position on which the button is drawn
+            var canteenButtons = []; //an array of canteen buttons
+            /*here the canteen buttons are drawn and given an EventListener to set their specific meallist visible and turn the other meallists invisible*/
             for(var i =0; i<canteens.length;i++){
                 var text = new createjs.Text(canteens[i].name,"20px Arial", 'Black');
                 var canteenButton = new createjs.Shape();
@@ -83,13 +90,14 @@
                 currentY = currentY + text.getBounds().height;
 
                 canteenButton.addEventListener("mousedown", function(event) {
+                    
                     for(var j = 0;j<ids.length;j++){
                         if(i==j){
                             container.getChildAt(ids[j]).visible = true;
                         } else{container.getChildAt(ids[j]).visible = false;}
                     }
-                    console.canteens[i];
-                    choicebuttonText.text = canteens[i].name;
+                    
+                    choicebuttonText.text = text.text;
                 });
                 canteenButtons.push(canteenButton);
             }
@@ -113,7 +121,7 @@
 
 
 
-            container.addChild(title, choicebutton);
+            container.addChild(title, choicebutton,choicebuttonText);
             return container;
         }
 
